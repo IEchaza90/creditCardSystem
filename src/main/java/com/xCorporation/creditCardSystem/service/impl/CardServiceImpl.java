@@ -26,11 +26,14 @@ import java.util.Scanner;
 @Service
 public class CardServiceImpl implements CardService {
 
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
 
-    @Autowired
-    private CardHolderService cardHolderService;
+    private final CardHolderService cardHolderService;
+
+    public CardServiceImpl(CardRepository cardRepository, CardHolderService cardHolderService) {
+        this.cardRepository = cardRepository;
+        this.cardHolderService = cardHolderService;
+    }
 
     @Override
     public void register() {

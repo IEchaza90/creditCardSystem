@@ -17,8 +17,11 @@ import java.util.Scanner;
 @Service
 public class CardHolderServiceImpl implements CardHolderService {
 
-    @Autowired
-    public CardHolderRepository cardHolderRepository;
+    private final CardHolderRepository cardHolderRepository;
+
+    public CardHolderServiceImpl(CardHolderRepository cardHolderRepository) {
+        this.cardHolderRepository = cardHolderRepository;
+    }
 
     @Override
     public void register() {

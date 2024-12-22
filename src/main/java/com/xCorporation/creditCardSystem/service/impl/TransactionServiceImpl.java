@@ -12,9 +12,7 @@ import com.xCorporation.creditCardSystem.rest.converters.TransactionConverter;
 import com.xCorporation.creditCardSystem.rest.model.TransactionRateResponse;
 import com.xCorporation.creditCardSystem.rest.model.TransactionRequest;
 import com.xCorporation.creditCardSystem.service.ServiceRateService;
-import com.xCorporation.creditCardSystem.service.SimpleMailSenderService;
 import com.xCorporation.creditCardSystem.service.TransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,17 +20,17 @@ import java.time.LocalDate;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
 
-    @Autowired
-    private ServiceRateService serviceRateService;
+    private final ServiceRateService serviceRateService;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
-    @Autowired
-    private SimpleMailSenderService simpleMailSenderService;
+    public TransactionServiceImpl(CardRepository cardRepository, ServiceRateService serviceRateService, TransactionRepository transactionRepository) {
+        this.cardRepository = cardRepository;
+        this.serviceRateService = serviceRateService;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
     public Transaction makePurchase(TransactionRequest transactionRequest) {

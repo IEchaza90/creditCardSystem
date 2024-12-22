@@ -18,17 +18,20 @@ import java.util.Scanner;
 @Service
 public class ServiceRateServiceImpl implements ServiceRateService {
 
-    @Autowired
-    private ServiceRatesGateway gateway;
+    private final ServiceRatesGateway gateway;
 
-    @Autowired
-    private VisaStrategy visaStrategy;
+    private final VisaStrategy visaStrategy;
 
-    @Autowired
-    private NaraStrategy naraStrategy;
+    private final NaraStrategy naraStrategy;
 
-    @Autowired
-    private AmexStrategy amexStrategy;
+    private final AmexStrategy amexStrategy;
+
+    public ServiceRateServiceImpl(ServiceRatesGateway serviceRatesGateway, VisaStrategy visaStrategy, NaraStrategy naraStrategy, AmexStrategy amexStrategy) {
+        this.gateway = serviceRatesGateway;
+        this.visaStrategy = visaStrategy;
+        this.naraStrategy = naraStrategy;
+        this.amexStrategy = amexStrategy;
+    }
 
     @Override
     public double calculateServiceRate(LocalDate date, Brand brand) {
