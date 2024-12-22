@@ -17,7 +17,8 @@ public class Card {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long card_id;
+    @Column(name = "card_id")
+    private Long cardId;
 
     @Column(name = "cvv")
     private int cvv;
@@ -28,7 +29,7 @@ public class Card {
     @Column(name = "brand")
     private String brand;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_holder_id")
     private CardHolder cardHolder;
 

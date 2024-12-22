@@ -1,9 +1,8 @@
 package com.xCorporation.creditCardSystem.utils;
 
-import java.util.Date;
 import java.util.Random;
 
-public class MenuUtils {
+public class GeneralUtils {
 
     public static Integer generateRandomCvv() {
         Random r = new Random();

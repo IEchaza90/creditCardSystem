@@ -1,19 +1,24 @@
 package com.xCorporation.creditCardSystem.service.impl;
 
-import com.xCorporation.creditCardSystem.converters.PrivateCardViewConverter;
+import com.xCorporation.creditCardSystem.exception.CardHolderNotFoundException;
+import com.xCorporation.creditCardSystem.exception.CardNotFoundException;
+import com.xCorporation.creditCardSystem.rest.converters.CardConverter;
+import com.xCorporation.creditCardSystem.rest.converters.PrivateCardViewConverter;
 import com.xCorporation.creditCardSystem.model.Brand;
 import com.xCorporation.creditCardSystem.model.Card;
 import com.xCorporation.creditCardSystem.model.CardHolder;
-import com.xCorporation.creditCardSystem.model.PrivateCard;
+import com.xCorporation.creditCardSystem.rest.model.CardRequest;
+import com.xCorporation.creditCardSystem.rest.model.CardResponse;
 import com.xCorporation.creditCardSystem.repository.CardHolderRepository;
 import com.xCorporation.creditCardSystem.repository.CardRepository;
+import com.xCorporation.creditCardSystem.service.CardHolderService;
 import com.xCorporation.creditCardSystem.service.CardService;
+import com.xCorporation.creditCardSystem.service.SimpleMailSenderService;
 import com.xCorporation.creditCardSystem.utils.DateUtils;
-import com.xCorporation.creditCardSystem.utils.MenuUtils;
+import com.xCorporation.creditCardSystem.utils.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +30,7 @@ public class CardServiceImpl implements CardService {
     private CardRepository cardRepository;
 
     @Autowired
-    private CardHolderRepository cardHolderRepository;
+    private CardHolderService cardHolderService;
 
     @Override
     public void register() {
@@ -71,7 +76,7 @@ public class CardServiceImpl implements CardService {
             System.out.println("Surname of the card holder: ");
             String surname = scanner.next();
 
-            CardHolder cardHolder = cardHolderRepository.findByNameAndSurname(name, surname);
+            CardHolder cardHolder = cardHolderService.findByNameAndSurname(name, surname);
             if (cardHolder == null) {
                 System.out.println("User not found");
             } else {
@@ -81,7 +86,7 @@ public class CardServiceImpl implements CardService {
             card.setCardHolder(cardHolder);
         }
 
-        card.setCvv(MenuUtils.generateRandomCvv());
+        card.setCvv(GeneralUtils.generateRandomCvv());
         cardRepository.save(card);
         System.out.println("Thank you for using our system");
 
@@ -92,9 +97,22 @@ public class CardServiceImpl implements CardService {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please insert de identity document for the card holder you wish to seek: ");
         String input = scanner.next();
-        List<PrivateCard> privateCards =  PrivateCardViewConverter.convert(cardRepository.findAllByCardHolderIdentityDocument(input));
+        List<CardResponse> cardResponses =  PrivateCardViewConverter.convert(cardRepository.findAllByCardHolderIdentityDocument(input));
         System.out.println(!cardRepository.findAllByCardHolderIdentityDocument(input).isEmpty()
                 ? PrivateCardViewConverter.convert(cardRepository.findAllByCardHolderIdentityDocument(input))
                 : "The user has no cards registered");
+    }
+
+    @Override
+    public Card registerCard(CardRequest cardRequest) {
+        CardHolder cardHolder =  cardHolderService.findById(cardRequest.getCardHolderId());
+        Card card = CardConverter.convert(cardRequest, cardHolder);
+        card.setCvv(GeneralUtils.generateRandomCvv());
+        return cardRepository.save(card);
+    }
+
+    @Override
+    public void deleteCard(Long id) {
+        cardRepository.deleteById(id);
     }
 }

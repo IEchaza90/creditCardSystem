@@ -39,7 +39,7 @@ public class ServiceRateServiceImpl implements ServiceRateService {
             default: throw new IllegalArgumentException("Invalid strategy");
         }
         date = date == null ? LocalDate.now() : date;
-        return (double) Math.round(gateway.calculateServiceRate(date) * 100) /100;
+        return (double) Math.round(gateway.calculateServiceRate(date) * 100) / 100;
     }
 
     @Override

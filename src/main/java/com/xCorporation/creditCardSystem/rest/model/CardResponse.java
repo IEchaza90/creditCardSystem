@@ -1,15 +1,14 @@
-package com.xCorporation.creditCardSystem.model;
+package com.xCorporation.creditCardSystem.rest.model;
 
 import com.xCorporation.creditCardSystem.utils.DateUtils;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder
-public class PrivateCard {
+public class CardResponse {
 
     private Long cardNumber;
 
